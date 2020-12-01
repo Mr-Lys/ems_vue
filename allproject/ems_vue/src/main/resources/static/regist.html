@@ -37,7 +37,7 @@
 									用户名:
 								</td>
 								<td valign="middle" align="left">
-									<input type="text" v-model="user.username" class="inputgri" name="username" />
+									<input type="text" v-model="user.username" class="inputgri"  />
 								</td>
 							</tr>
 							<tr>
@@ -102,6 +102,7 @@
 		// 绑定的是整个页面的大div
 		el: "#wrap",
 		data:{
+			// 验证码图标url
 			url:"",
 			user: {
 				sex: '男',
@@ -117,6 +118,7 @@
 				axios.get("http://localhost:8080/user/getImage?time="+Math.random()).then((res)=>{
 					console.log(res.data)
 					// alert('响应成功')
+
 					_this.url = res.data
 				})
 			},
@@ -124,8 +126,13 @@
 			register(){
 				// post方式也可以通过地址栏的形式进行传递非对象参数
 				axios.post("http://localhost:8080/user/register?code="+this.code,this.user).then(res=>{
-					debugger
 					console.log(res.data)
+					if (res.data.state){
+						alert("注册成功！")
+						window.location.href="/login.html"
+					}else {
+						alert(res.data.msg)
+					}
 				})
 			}
 		},
@@ -134,7 +141,7 @@
 			var _this = this
 			axios.get("http://localhost:8080/user/getImage?time="+Math.random()).then((res)=>{
 				console.log(res.data)
-
+				// 验证码图标url
 				_this.url = res.data
 			})
 		}

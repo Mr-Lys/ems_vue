@@ -71,7 +71,8 @@ public class UserController {
         } catch (Exception e) {
             e.printStackTrace();
             map.put("status",false);
-            map.put("msg","提示：注册失败！");
+            // 将其他异常捕获的信息进行打印
+            map.put("msg","提示："+e.getMessage());
         }
         return map;
     }

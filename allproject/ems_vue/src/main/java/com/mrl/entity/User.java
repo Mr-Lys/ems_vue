@@ -1,5 +1,7 @@
 package com.mrl.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -11,12 +13,13 @@ import java.util.Date;
 @TableName("t_user")
 @Accessors(chain = true)
 public class User {
-    @TableId("id")
-    private Integer id; // String 类型api
-    private String name;
+    @TableId(value = "id",type = IdType.ASSIGN_UUID)
+    private String id; // String 类型api
+    private String username;
     private String realname;
     private String password;
     private String sex;
     private String status;
+    @TableField("registerTime")
     private Date registerTime;
 }
