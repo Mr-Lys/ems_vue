@@ -1,0 +1,142 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<title>regist</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link rel="stylesheet" type="text/css" href="css/style.css" />
+	</head>
+	<body>
+		<div id="wrap">
+			<div id="top_content">
+					<div id="header">
+						<div id="rightheader">
+							<p>
+								2009/11/20
+								<br />
+							</p>
+						</div>
+						<div id="topheader">
+							<h1 id="title">
+								<a href="#">main</a>
+							</h1>
+						</div>
+						<div id="navigation">
+						</div>
+					</div>
+				<div id="content">
+					<p id="whereami">
+					</p>
+					<h1>
+						注册
+					</h1>
+					<form action="login.html" method="post">
+						<table cellpadding="0" cellspacing="0" border="0"
+							class="form_table">
+							<tr>
+								<td valign="middle" align="right">
+									用户名:
+								</td>
+								<td valign="middle" align="left">
+									<input type="text" v-model="user.username" class="inputgri" name="username" />
+								</td>
+							</tr>
+							<tr>
+								<td valign="middle" align="right">
+									真实姓名:
+								</td>
+								<td valign="middle" align="left">
+									<input type="text" v-model="user.realname" class="inputgri" name="name" />
+								</td>
+							</tr>
+							<tr>
+								<td valign="middle" align="right">
+									密码:
+								</td>
+								<td valign="middle" align="left">
+									<input type="password" v-model="user.password" class="inputgri" name="pwd" />
+								</td>
+							</tr>
+							<tr>
+								<td valign="middle" align="right">
+									性别:
+								</td>
+								<td valign="middle" align="left">
+									男
+									<input type="radio" class="inputgri" v-model="user.sex" value="男" checked="checked"/>
+									女
+									<input type="radio" class="inputgri" v-model="user.sex" value="女"/>
+								</td>
+							</tr>
+							
+							<tr>
+								<td valign="middle" align="right">
+									验证码:
+								</td>
+								<td valign="middle" align="left">
+									<input type="text" class="inputgri" v-model="code"  />
+								</td>
+								<td>
+									<img id="num" :src="url" />
+									<a href="javascript:;" @click="getImage()">换一张</a>
+								</td>
+							</tr>
+						</table>
+						<p>
+							<input type="button" class="button" @click="register" value="Submit &raquo;" />
+						</p>
+					</form>
+				</div>
+			</div>
+			<div id="footer">
+				<div id="footer_bg">
+				ABC@126.com
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
+<script src="js/vue.js"></script>
+<script src="js/axios.min.js"></script>
+<script>
+	 new Vue({
+		// 绑定的是整个页面的大div
+		el: "#wrap",
+		data:{
+			url:"",
+			user: {
+				sex: '男',
+			},
+			code:""
+		},
+		methods:{
+			// 用来更换验证码
+			getImage(){
+				var _this = this
+				// 浏览器默认不会请求相同路径,可以选择添加时间戳来更该请求路径,不会被缓存限定
+				// axios.get("http://localhost:8080/user/getImage").then((res)=>{
+				axios.get("http://localhost:8080/user/getImage?time="+Math.random()).then((res)=>{
+					console.log(res.data)
+					// alert('响应成功')
+					_this.url = res.data
+				})
+			},
+			// 注册用户信息
+			register(){
+				// post方式也可以通过地址栏的形式进行传递非对象参数
+				axios.post("http://localhost:8080/user/register?code="+this.code,this.user).then(res=>{
+					debugger
+					console.log(res.data)
+				})
+			}
+		},
+		created(){
+
+			var _this = this
+			axios.get("http://localhost:8080/user/getImage?time="+Math.random()).then((res)=>{
+				console.log(res.data)
+
+				_this.url = res.data
+			})
+		}
+	})
+</script>
