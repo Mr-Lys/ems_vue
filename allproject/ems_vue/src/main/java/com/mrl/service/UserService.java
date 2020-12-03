@@ -9,4 +9,5 @@ public interface UserService extends IService<User>  {
      * @param user
      */
     void register(User user);
+    User login(User user);
 }

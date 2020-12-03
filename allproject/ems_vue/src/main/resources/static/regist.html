@@ -82,7 +82,7 @@
 							</tr>
 						</table>
 						<p>
-							<input type="button" class="button" @click="register" value="Submit &raquo;" />
+							<input type="button" class="button" @click="register" />
 						</p>
 					</form>
 				</div>
@@ -118,7 +118,7 @@
 				axios.get("http://localhost:8080/user/getImage?time="+Math.random()).then((res)=>{
 					console.log(res.data)
 					// alert('响应成功')
-
+					debugger
 					_this.url = res.data
 				})
 			},
@@ -126,18 +126,15 @@
 			register(){
 				// post方式也可以通过地址栏的形式进行传递非对象参数
 				axios.post("http://localhost:8080/user/register?code="+this.code,this.user).then(res=>{
-					console.log(res.data)
-					if (res.data.state){
-						alert("注册成功！")
+					console.log(res)
+
+					if (res.status){
 						window.location.href="/login.html"
-					}else {
-						alert(res.data.msg)
 					}
 				})
 			}
 		},
 		created(){
-
 			var _this = this
 			axios.get("http://localhost:8080/user/getImage?time="+Math.random()).then((res)=>{
 				console.log(res.data)

@@ -5,6 +5,7 @@ import com.mrl.service.UserService;
 import com.mrl.utils.VerifyCodeUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Base64Utils;
@@ -73,6 +74,24 @@ public class UserController {
             map.put("status",false);
             // 将其他异常捕获的信息进行打印
             map.put("msg","提示："+e.getMessage());
+        }
+        return map;
+    }
+
+    @ApiOperation("根据输入的用户名进行查询")
+    @PostMapping("login")
+    public Map<String,Object> login(@ApiParam("user")@RequestBody User user){
+        log.info("当前登录用户的信息[{}]",user);
+        Map<String,Object> map = new HashMap<>();
+        try{
+            User userDB = userService.login(user);
+            map.put("status",true);
+            map.put("msg","登录成功");
+            map.put("result",userDB);
+        }catch(Exception e){
+            e.printStackTrace();
+            map.put("status",false);
+            map.put("msg",e.getMessage());
         }
         return map;
     }

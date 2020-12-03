@@ -1,6 +1,7 @@
 package com.mrl.service.serviceImpl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.mrl.dao.UserDao;
 import com.mrl.entity.User;
@@ -20,6 +21,8 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
     @Autowired
     private UserDao userDao;
 
+
+
     @Override
     public void register(User user) {
         // 根据用户输入的用户名判断用户是否存在
@@ -33,5 +36,23 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
         user.setRegisterTime(new Date());
         log.info("要存入数据库的数据是:[{}]",user);
         userDao.insert(user);
+    }
+
+    @Override
+    public User login(User user) {
+        // 根据用户输入的用户名进行查询
+        User userDB = userDao.selectOne(new QueryWrapper<User>().eq("username",user.getUsername()));
+        if (!ObjectUtils.isEmpty(userDB)){
+            // 用户名相同，比较密码
+            if (userDB.getPassword().equals(user.getPassword())){
+                // 密码相同
+                return userDB;
+            }else {
+                throw  new RuntimeException("输入密码不正确");
+            }
+        }else {
+            // 异常就相当于返回
+            throw new RuntimeException("用户名输入错误");
+        }
     }
 }

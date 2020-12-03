@@ -13,12 +13,13 @@
 						<p>
 							2009/11/20 
 							<br />
-							安全退出
+<!--							href内容为屏蔽原始超链接-->
+							<a href="javascript:;" @click="logout">安全退出</a>
 						</p>
 					</div>
 					<div id="topheader">
 						<h1 id="title">
-							<a href="#">main</a>
+							<a href="/emplist.html">main</a>
 						</h1>
 					</div>
 					<div id="navigation">
@@ -28,7 +29,7 @@
 					<p id="whereami">
 					</p>
 					<h1>
-						Welcome!
+						Welcome!{{user.realname}}
 					</h1>
 					<table class="table">
 						<tr class="table_header">
@@ -105,3 +106,34 @@
 		</div>
 	</body>
 </html>
+<script src="js/vue.js"></script>
+<script src="js/axios.min.js"></script>
+<script>
+	var app = new Vue({
+		el:"#wrap",
+		data:{
+			user:{}
+		},
+		methods:{
+			logout(){
+				// localStorage内容清空即可
+				localStorage.removeItem("user");
+				location.reload(true);// 刷新页面
+			}
+		},
+		created: function () {
+			var userString = localStorage.getItem("user")
+
+			if (userString != null){
+				// 登录成功
+				this.user = JSON.parse(userString);
+			}else{
+				alert("您尚未登录，点击确定跳转至登录")
+				// 返回登录界面
+				location.href="/login.html"
+			}
+
+			console.log(user)
+		}
+	})
+</script>
