@@ -41,7 +41,7 @@
 									name:
 								</td>
 								<td valign="middle" align="left">
-									<input type="text" class="inputgri" name="name" />
+									<input type="text" class="inputgri" v-model="emp.name" />
 								</td>
 							</tr>
 							<tr>
@@ -49,7 +49,7 @@
 									photo:
 								</td>
 								<td valign="middle" align="left">
-									<input type="file" name="photo" />
+									<input type="file" ref="myPhoto" name="photo" />
 								</td>
 							</tr>
 							<tr>
@@ -57,7 +57,7 @@
 									salary:
 								</td>
 								<td valign="middle" align="left">
-									<input type="text" class="inputgri" name="salary" />
+									<input type="text" class="inputgri" v-model="emp.salary" />
 								</td>
 							</tr>
 							<tr>
@@ -65,12 +65,12 @@
 									age:
 								</td>
 								<td valign="middle" align="left">
-									<input type="text" class="inputgri" name="age" />
+									<input type="text" class="inputgri" v-model="emp.age" />
 								</td>
 							</tr>
 						</table>
 						<p>
-							<input type="submit" class="button" value="Confirm" />
+							<input type="button" @click="saveEmp" class="button" value="Confirm" />
 						</p>
 					</form>
 				</div>
@@ -89,13 +89,41 @@
 	var app = new Vue({
 		el:"#wrap",
 		data:{
-			user:{}
+			user:{},
+			emp:{} ,// 定义员工信息
 		},
 		methods:{
 			logout(){
 				// localStorage内容清空即可
 				localStorage.removeItem("user");
 				location.reload(true);// 刷新页面
+			},
+			saveEmp(){
+				console.log(this.emp)
+				console.log(this.$refs.myPhoto.files[0]) // 可能会有多个文件
+				var formData = new FormData()
+				formData.append("name",this.emp.name);
+				formData.append("salary",this.emp.salary);
+				formData.append("age",this.emp.age);
+				formData.append("photo",this.$refs.myPhoto.files[0])
+				// 文件上传时必须是post方式，entype必须为multipart/form-data
+				var _this = this
+				axios({
+					method:'post',
+					url:"http://localhost:8080/emp/save",
+					data:formData,
+					headers:{
+						'content-type':'multipart/form-data'
+					}
+				}).then(res=>{
+					console.log(res.data)
+					if (res.data.status){
+						location.href="/emplist.html"
+					}else {
+						// 如果保存失败，则清空相关信息
+						_this.emp = []
+					}
+				})
 			}
 		},
 		created: function () {
